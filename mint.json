@@ -23,7 +23,7 @@
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://cashpay.space/dashboard/home"
+    "url": "https://payvra.space/dashboard/home"
   },
   "tabs": [
     {
@@ -33,9 +33,9 @@
   ],
   "anchors": [
     {
-      "name": "CashPay",
+      "name": "Payvra",
       "icon": "book-open-cover",
-      "url": "https://cashpay.space/dashboard/home"
+      "url": "https://payvra.space/dashboard/home"
     }
   ],
   "navigation": [
@@ -53,17 +53,24 @@
       ]
     },
     {
-      "group": "Payment API",
+      "group": "Currencies",
       "pages": [
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/fetch",
-        "api-reference/endpoint/submit"
+        "api-reference/endpoint/currencies"
       ]
     },
     {
-      "group": "Cash App API",
+      "group": "Invoices",
       "pages": [
-        "api-reference/endpoint/cashapp-receipt"
+        "api-reference/endpoint/invoice-create",
+        "api-reference/endpoint/invoice-fetch",
+        "api-reference/endpoint/whitelabel-create"
+      ]
+    },
+    {
+      "group": "Payouts",
+      "pages": [
+        "api-reference/endpoint/payout-create",
+        "api-reference/endpoint/payout-fetch"
       ]
     }
   ],

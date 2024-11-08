@@ -3,23 +3,23 @@ title: 'Webhook'
 description: 'Receive POST requests to your URL automatically when an event occurs.'
 ---
 
-Merchants can set up a `callbackUrl` in their merchant requests, and upon processing payments, CashPay will send you notifications in JSON format with all required information about the transaction, such as the amount and status, when the payment status is changed to Waiting, Confirming, Paid, Failed, or Expired.
+Merchants can set up a `callbackUrl` in their merchant requests, and upon processing payments, Payvra will send you notifications in JSON format with all required information about the transaction, such as the amount and status, when the payment status is changed to Waiting, Confirming, Paid, Failed, or Expired.
 
 To receive webhook notifications, first, you should implement a standard HTTP POST (application/json) call over an HTTPS URL to a CGI script on your server. Insert your created endpoint address in the `callbackUrl` field of merchant requests. You will receive payment updates (statuses) to this URL address.
 
 However, you will initially receive a callback with the "Confirming" status. You should wait for a second callback where the "status" value will be "Paid". When we confirm the transaction, we are ready to manage all the risks concerning accepting real funds later. You should not be concerned about it.
 
-Merchant's callbackUrl must return an HTTP Response 200 with content: ok for CashPay API to confirm the callback as successful. The system will try to deliver a webhook notification up to 5 times or until a successful delivery occurs, whichever happens first. If the first attempt fails, the second one is triggered after approximately 1 minute. The third one is delayed for 3 more minutes, the fourth for 30 minutes, and the last one for 3 hours.
+Merchant's callbackUrl must return an HTTP Response 200 with content: ok for Payvra API to confirm the callback as successful. The system will try to deliver a webhook notification up to 5 times or until a successful delivery occurs, whichever happens first. If the first attempt fails, the second one is triggered after approximately 1 minute. The third one is delayed for 3 more minutes, the fourth for 30 minutes, and the last one for 3 hours.
 
 The payout webhook is similar to a merchant webhook exactly. But for withdrawals, you will receive different values of the "address" parameter in every callback.
 
 ### Validating Callbacks
 
-Merchants must validate the signature of callbacks coming from CashPay using either their `Webhook Secret Key` if the webhook was set up in the dashboard, or an `API Key`associated with the account if webhook is from `callbackUrl`. also for payout webhooks you must validate the signature using your `PAYOUT_API_KEY`. CashPay uses your `MERCHANT_API_KEY` as the HMAC shared secret key to generate an HMAC(sha512) signature of the raw POST data. The HMAC signature is sent as an HTTP header called `HMAC`. The body of the request contains the callback data in JSON format, similar to the Payment Information API response body.
+Merchants must validate the signature of callbacks coming from Payvra using either their `Webhook Secret Key` if the webhook was set up in the dashboard, or an `API Key`associated with the account if webhook is from `callbackUrl`. also for payout webhooks you must validate the signature using your `PAYOUT_API_KEY`. Payvra uses your `MERCHANT_API_KEY` as the HMAC shared secret key to generate an HMAC(sha512) signature of the raw POST data. The HMAC signature is sent as an HTTP header called `HMAC`. The body of the request contains the callback data in JSON format, similar to the Payment Information API response body.
 
 ### Testing Webhook
 
-For payment callback handling, you can use tools like requestcatcher.com to create a test `callbackUrl` and inspect the callback data sent from CashPay. Note that CashPay payment callbacks will not be sent to private networks (e.g., localhost).
+For payment callback handling, you can use tools like requestcatcher.com to create a test `callbackUrl` and inspect the callback data sent from Payvra. Note that Payvra payment callbacks will not be sent to private networks (e.g., localhost).
 
 For local debugging, you can use services like https://ngrok.io to expose your local server to the internet and receive webhook callbacks.
 
@@ -27,11 +27,11 @@ For local debugging, you can use services like https://ngrok.io to expose your l
 
 1. Create a web server and define an endpoint to handle POST requests.
 
-   - Ensure that the firewall software on your server (e.g., Cloudflare) allows incoming requests from CashPay. You may need to whitelist CashPay's IP addresses on your side. Please reach out to support@cashpay.space to obtain the list of IP addresses.
+   - Ensure that the firewall software on your server (e.g., Cloudflare) allows incoming requests from Payvra. You may need to whitelist Payvra's IP addresses on your side. Please reach out to support@payvra.space to obtain the list of IP addresses.
 
 2. Configure your server to receive POST requests at the specified endpoint URL.
 
-   - The POST request body will contain the necessary parameters sent by CashPay in JSON format.
+   - The POST request body will contain the necessary parameters sent by Payvra in JSON format.
 
 3. Validate the HMAC signature of the request to ensure the authenticity of the callback.
 
@@ -41,7 +41,7 @@ For local debugging, you can use services like https://ngrok.io to expose your l
 
 ### Sample Payment IPN data
 
-In this section, we will provide examples of the data CashPay send to your system at various stages of the payment process.
+In this section, we will provide examples of the data Payvra send to your system at various stages of the payment process.
 
 <CodeGroup>
 
@@ -56,7 +56,7 @@ In this section, we will provide examples of the data CashPay send to your syste
   "isWhiteLabel": false,
   "receiptId": null,
   "paidAmount": null,
-  "cashpayFee": null,
+  "payvraFee": null,
   "status": "PENDING",
   "callbackUrl": "https://your-callback-url.com/callback",
   "returnUrl": "https://your-return-url.com",
@@ -77,7 +77,7 @@ In this section, we will provide examples of the data CashPay send to your syste
   "isWhiteLabel": false,
   "receiptId": "c6onh81g30c1aw37bz89nuwgt",
   "paidAmount": null,
-  "cashpayFee": 0.17,
+  "payvraFee": 0.17,
   "status": "PAID",
   "callbackUrl": "https://your-callback-url.com/callback",
   "returnUrl": "https://your-return-url.com",
@@ -98,7 +98,7 @@ In this section, we will provide examples of the data CashPay send to your syste
   "isWhiteLabel": false,
   "receiptId": null,
   "paidAmount": null,
-  "cashpayFee": null,
+  "payvraFee": null,
   "status": "EXPIRED",
   "callbackUrl": "https://your-callback-url.com/callback",
   "returnUrl": "https://your-return-url.com",
@@ -119,7 +119,7 @@ In this section, we will provide examples of the data CashPay send to your syste
   "isWhiteLabel": false,
   "receiptId": "c6onh81g30c1aw37bz89nuwgt",
   "paidAmount": null,
-  "cashpayFee": null,
+  "payvraFee": null,
   "status": "FAILED",
   "callbackUrl": "https://your-callback-url.com/callback",
   "returnUrl": "https://your-return-url.com",
@@ -283,7 +283,7 @@ Here are some common issues you might encounter when implementing webhooks and h
 <AccordionGroup>
   <Accordion title="Not receiving webhook notifications">
     - Ensure your `callbackUrl` is correctly set and accessible from the internet.
-    - Check your server's firewall settings to allow incoming requests from CashPay.
+    - Check your server's firewall settings to allow incoming requests from Payvra.
     - Verify that your server is responding with a 200 OK status and 'ok' message.
   </Accordion>
   <Accordion title="Invalid HMAC signature">
@@ -302,4 +302,4 @@ Here are some common issues you might encounter when implementing webhooks and h
   </Accordion>
 </AccordionGroup>
 
-If you're still experiencing issues after trying these solutions, please contact our support team at support@cashpay.space for further assistance.
+If you're still experiencing issues after trying these solutions, please contact our support team at support@payvra.space for further assistance.

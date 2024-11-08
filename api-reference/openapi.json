@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "OpenAPI Payvra",
+    "description": "Payvra API",
     "license": {
       "name": "MIT"
     },
@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://cashpay.space"
+      "url": "https://payvra.com"
     }
   ],
   "security": [
@@ -130,40 +130,28 @@
       }
     },
     
-    "/api/v1/payments/create": {
+    "/api/v1/currencies": {
       "post": {
-        "summary": "Create a new payment invoice",
-        "description": "Creates a new payment invoice for the authenticated user",
+        "summary": "Fetch supported cryptocurrencies",
+        "description": "Returns a list of cryptocurrencies supported for the authenticated merchant",
         "tags": [
-          "Payments"
+          "Currencies"
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePaymentRequest"
-              }
-            }
+        "security": [
+          {
+            "BearerAuth": []
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Successfully created payment invoice",
+            "description": "Successfully retrieved supported cryptocurrencies",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentInvoice"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - invalid input",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CryptoCurrency"
+                  }
                 }
               }
             }
@@ -191,13 +179,65 @@
         }
       }
     },
-    "/api/v1/payments/fetch": {
+    "/api/v1/merchants/invoice/create": {
+      "post": {
+        "summary": "Create a payment invoice",
+        "description": "Creates a new payment invoice for the authenticated merchant",
+        "tags": ["Invoices"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentInvoiceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment invoice created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInvoiceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/merchants/invoice/fetch": {
       "post": {
         "summary": "Fetch a payment invoice",
-        "description": "Fetches a payment invoice for the authenticated user",
-        "tags": [
-          "Payments"
-        ],
+        "description": "Retrieves details of an existing payment invoice",
+        "tags": ["Invoices"],
         "security": [
           {
             "BearerAuth": []
@@ -208,24 +248,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FetchPaymentRequest"
+                "$ref": "#/components/schemas/FetchPaymentInvoiceRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successfully fetched payment invoice",
+            "description": "Payment invoice retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentInvoice"
+                  "$ref": "#/components/schemas/PaymentInvoiceResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - invalid input",
+            "description": "Bad request - validation error",
             "content": {
               "application/json": {
                 "schema": {
@@ -236,26 +276,6 @@
           },
           "401": {
             "description": "Unauthorized - invalid API key",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Payment invoice not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -267,13 +287,11 @@
         }
       }
     },
-    "/api/v1/payments/submit": {
+    "/api/v1/merchants/payout/create": {
       "post": {
-        "summary": "Submit a web receipt for a payment invoice",
-        "description": "Submits a web receipt for a white-label payment invoice",
-        "tags": [
-          "Payments"
-        ],
+        "summary": "Create a payout",
+        "description": "Creates a new payout for the authenticated merchant",
+        "tags": ["Payouts"],
         "security": [
           {
             "BearerAuth": []
@@ -284,24 +302,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SubmitWebReceiptRequest"
+                "$ref": "#/components/schemas/CreatePayoutRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successfully submitted web receipt",
+            "description": "Payout created successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaymentInvoice"
+                  "$ref": "#/components/schemas/PayoutResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - invalid input or non-white-label invoice",
+            "description": "Bad request - validation error",
             "content": {
               "application/json": {
                 "schema": {
@@ -312,16 +330,6 @@
           },
           "401": {
             "description": "Unauthorized - invalid API key",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -333,13 +341,11 @@
         }
       }
     },
-    "/api/v1/cashapp/receipt": {
+    "/api/v1/merchants/payout/fetch": {
       "post": {
-        "summary": "Fetch CashApp receipt details",
-        "description": "Fetches details from a CashApp web receipt URL",
-        "tags": [
-          "CashApp"
-        ],
+        "summary": "Fetch a payout",
+        "description": "Retrieves details of an existing payout",
+        "tags": ["Payouts"],
         "security": [
           {
             "BearerAuth": []
@@ -350,24 +356,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FetchCashAppReceiptRequest"
+                "$ref": "#/components/schemas/FetchPayoutRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successfully fetched receipt details",
+            "description": "Payout retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CashAppReceiptDetails"
+                  "$ref": "#/components/schemas/PayoutResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - invalid input",
+            "description": "Bad request - validation error",
             "content": {
               "application/json": {
                 "schema": {
@@ -385,9 +391,53 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/merchants/whitelabel/create": {
+      "post": {
+        "summary": "Create a whitelabel payment invoice",
+        "description": "Creates a new whitelabel payment invoice for the authenticated merchant with specific cryptocurrency and network",
+        "tags": ["Invoices"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWhiteLabelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Whitelabel payment invoice created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInvoiceResponse"
+                }
+              }
+            }
           },
-          "500": {
-            "description": "Internal server error",
+          "400": {
+            "description": "Bad request - validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
             "content": {
               "application/json": {
                 "schema": {
@@ -408,206 +458,6 @@
       }
     },
     "schemas": {
-      "CreatePaymentRequest": {
-        "type": "object",
-        "required": [
-          "cashTag",
-          "amount"
-        ],
-        "properties": {
-          "cashTag": {
-            "type": "string",
-            "description": "The cash tag for the payment"
-          },
-          "amount": {
-            "type": "number",
-            "format": "float",
-            "description": "The amount of the payment"
-          },
-          "isWhiteLabel": {
-            "type": "boolean",
-            "description": "Whether the payment is white-labeled",
-            "default": false
-          },
-          "callbackUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to call back after payment processing"
-          },
-          "returnUrl": {
-            "type": "string",
-            "format": "uri",
-            "description": "The URL to return to after payment"
-          }
-        }
-      },
-      "PaymentInvoice": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The ID of the payment invoice"
-          },
-          "userId": {
-            "type": "string",
-            "description": "The ID of the user / merchant who created the payment invoice"
-          },
-          "cashTag": {
-            "type": "string",
-            "description": "The CashTag of the payment recipient"
-          },
-          "note": {
-            "type": "string",
-            "description": "The required note associated with the payment"
-          },
-          "amount": {
-            "type": "number",
-            "format": "float",
-            "description": "The amount invoiced"
-          },
-          "isWhiteLabel": {
-            "type": "boolean",
-            "description": "Whether the payment is white-labeled"
-          },
-          "receiptId": {
-            "type": "string",
-            "description": "The ID of the web receipt for the payment",
-            "nullable": true
-          },
-          "paidAmount": {
-            "type": "number",
-            "format": "float",
-            "nullable": true,
-            "description": "The amount paid"
-          },
-          "cashpayFee": {
-            "type": "number",
-            "format": "float",
-            "nullable": true,
-            "description": "The CashPay service fee"
-          },
-          "status": {
-            "type": "string",
-            "enum": ["PENDING", "UNDER_PAID", "PAID", "FAILED", "EXPIRED"]
-          },
-          "paymentUrl": {
-            "type": "string",
-            "description": "The URL where the user can make the payment"
-          },
-          "callbackUrl": {
-            "type": "string",
-            "description": "The URL to call back on payment status changes",
-            "nullable": true
-          },
-          "returnUrl": {
-            "type": "string",
-            "description": "The URL where the user will be redirected after the payment",
-            "nullable": true
-          },
-          "expiresAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time when the payment expires"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time when the payment was created"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time when the payment was last updated"
-          }
-        }
-      },
-      "FetchPaymentRequest": {
-        "type": "object",
-        "required": [
-          "invoiceId"
-        ],
-        "properties": {
-          "invoiceId": {
-            "type": "string",
-            "description": "The ID of the payment invoice to fetch"
-          }
-        }
-      },
-      "SubmitWebReceiptRequest": {
-        "type": "object",
-        "required": [
-          "invoiceId",
-          "webReceipt"
-        ],
-        "properties": {
-          "invoiceId": {
-            "type": "string",
-            "description": "The ID of the payment invoice"
-          },
-          "webReceipt": {
-            "type": "string",
-            "description": "The web receipt for the payment"
-          }
-        }
-      },
-      "FetchCashAppReceiptRequest": {
-        "type": "object",
-        "required": [
-          "webReceipt"
-        ],
-        "properties": {
-          "webReceipt": {
-            "type": "string",
-            "description": "The CashApp web receipt URL",
-            "pattern": "^https://cash.app/payments/"
-          }
-        }
-      },
-      "CashAppReceiptDetails": {
-        "type": "object",
-        "properties": {
-          "cashTag": {
-            "type": "string",
-            "description": "The CashTag of the payment recipient"
-          },
-          "value": {
-            "type": "string",
-            "description": "The payment amount as a string"
-          },
-          "note": {
-            "type": "string",
-            "description": "The note associated with the payment"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The timestamp of the payment"
-          },
-          "status": {
-            "type": "string",
-            "enum": ["Completed", "Failed"],
-            "description": "The status of the payment"
-          },
-          "source": {
-            "type": "string",
-            "description": "The source of the payment"
-          },
-          "identifier": {
-            "type": "string",
-            "description": "The unique Cash App identifier of the payment"
-          },
-          "to": {
-            "type": "string",
-            "description": "The recipient of the payment"
-          },
-          "from": {
-            "type": "string",
-            "description": "The sender of the payment"
-          }
-        }
-      },
-
-
       "Plant": {
         "required": [
           "name"
@@ -657,6 +507,313 @@
           },
           "message": {
             "type": "string"
+          }
+        }
+      },
+
+      "CryptoCurrency": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "The symbol/ticker of the cryptocurrency"
+          },
+          "name": {
+            "type": "string",
+            "description": "The full name of the cryptocurrency"
+          },
+          "networks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Network"
+            },
+            "description": "Available networks for this cryptocurrency"
+          }
+        }
+      },
+      "Network": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "The network identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "The display name of the network"
+          },
+          "minConfirm": {
+            "type": "integer",
+            "description": "Minimum confirmations required",
+            "nullable": true
+          },
+          "withdrawFee": {
+            "type": "number",
+            "format": "float",
+            "description": "Fee for withdrawals",
+            "nullable": true
+          },
+          "withdrawMin": {
+            "type": "number",
+            "format": "float",
+            "description": "Minimum withdrawal amount",
+            "nullable": true
+          },
+          "depositMin": {
+            "type": "number",
+            "format": "float",
+            "description": "Minimum deposit amount",
+            "nullable": true
+          },
+          "staticFixedFee": {
+            "type": "number",
+            "format": "float",
+            "description": "Fixed fee amount",
+            "nullable": true
+          }
+        }
+      },
+      "CreatePaymentInvoiceRequest": {
+        "type": "object",
+        "required": ["amount"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Payment amount",
+            "minimum": 0
+          },
+          "amountCurrency": {
+            "type": "string",
+            "description": "Currency for the amount",
+            "default": "USD"
+          },
+          "acceptedCoins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of accepted cryptocurrency symbols"
+          },
+          "underPaidCover": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50,
+            "multipleOf": 0.1,
+            "description": "Percentage of underpayment to accept"
+          },
+          "feePaidByPayer": {
+            "type": "boolean",
+            "description": "Whether the fee is paid by the payer"
+          },
+          "lifeTime": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 1440,
+            "default": 1440,
+            "description": "Invoice lifetime in minutes"
+          },
+          "returnUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to return to after payment"
+          }
+        }
+      },
+      "FetchPaymentInvoiceRequest": {
+        "type": "object",
+        "required": ["invoiceId"],
+        "properties": {
+          "invoiceId": {
+            "type": "string",
+            "description": "ID of the payment invoice to fetch"
+          }
+        }
+      },
+      "PaymentInvoiceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "merchantId": {
+            "type": "string"
+          },
+          "paymentUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "CONFIRMING", "UNDER_PAID", "PAID", "FAILED", "EXPIRED"]
+          },
+          "address": {
+            "type": "string"
+          },
+          "txHash": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "amountCurrency": {
+            "type": "string"
+          },
+          "rate": {
+            "type": "number"
+          },
+          "payAmount": {
+            "type": "number"
+          },
+          "cryptoCurrency": {
+            "type": "object",
+            "properties": {
+              "symbol": {
+                "type": "string"
+              }
+            }
+          },
+          "feePaidByPayer": {
+            "type": "boolean"
+          },
+          "underPaidCover": {
+            "type": "number"
+          },
+          "isWhiteLabel": {
+            "type": "boolean"
+          },
+          "returnUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreatePayoutRequest": {
+        "type": "object",
+        "required": ["currency", "network", "amount", "address"],
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "Cryptocurrency symbol"
+          },
+          "network": {
+            "type": "string",
+            "description": "Network for the cryptocurrency"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount to withdraw",
+            "minimum": 0,
+            "multipleOf": 0.00000001
+          },
+          "address": {
+            "type": "string",
+            "description": "Destination address for the payout"
+          }
+        }
+      },
+      "FetchPayoutRequest": {
+        "type": "object",
+        "required": ["payoutId"],
+        "properties": {
+          "payoutId": {
+            "type": "string",
+            "description": "ID of the payout to fetch"
+          }
+        }
+      },
+      "PayoutResponse": {
+        "type": "object",
+        "properties": {
+          "wallet": {
+            "type": "object",
+            "properties": {
+              "merchantId": {
+                "type": "string"
+              },
+              "currency": {
+                "type": "object",
+                "properties": {
+                  "symbol": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "network": {
+            "type": "object",
+            "properties": {
+              "network": {
+                "type": "string"
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PROCESSING", "CONFIRMING", "COMPLETED", "REJECTED"]
+          },
+          "address": {
+            "type": "string"
+          },
+          "txHash": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateWhiteLabelRequest": {
+        "type": "object",
+        "required": ["amount", "payCurrency"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Amount for the payment invoice",
+            "minimum": 0
+          },
+          "amountCurrency": {
+            "type": "string",
+            "description": "Currency of the amount",
+            "default": "USD"
+          },
+          "underPaidCover": {
+            "type": "number",
+            "description": "Percentage of underpayment that will be accepted",
+            "minimum": 0,
+            "maximum": 50,
+            "multipleOf": 0.1
+          },
+          "feePaidByPayer": {
+            "type": "boolean",
+            "description": "Whether the fee should be paid by the payer"
+          },
+          "lifeTime": {
+            "type": "number",
+            "description": "Invoice lifetime in minutes",
+            "minimum": 1,
+            "maximum": 1440,
+            "default": 1440
+          },
+          "payCurrency": {
+            "type": "string",
+            "description": "Cryptocurrency symbol to be used for payment"
+          },
+          "network": {
+            "type": "string",
+            "description": "Network to be used for the cryptocurrency"
           }
         }
       }
