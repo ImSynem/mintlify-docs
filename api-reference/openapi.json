@@ -10,12 +10,12 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://cashpay.space"
     }
   ],
   "security": [
     {
-      "bearerAuth": []
+      "BearerAuth": []
     }
   ],
   "paths": {
@@ -128,10 +128,486 @@
           }
         }
       }
+    },
+    
+    "/api/v1/payments/create": {
+      "post": {
+        "summary": "Create a new payment invoice",
+        "description": "Creates a new payment invoice for the authenticated user",
+        "tags": [
+          "Payments"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully created payment invoice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInvoice"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/fetch": {
+      "post": {
+        "summary": "Fetch a payment invoice",
+        "description": "Fetches a payment invoice for the authenticated user",
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FetchPaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully fetched payment invoice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInvoice"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Payment invoice not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/submit": {
+      "post": {
+        "summary": "Submit a web receipt for a payment invoice",
+        "description": "Submits a web receipt for a white-label payment invoice",
+        "tags": [
+          "Payments"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitWebReceiptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully submitted web receipt",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInvoice"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input or non-white-label invoice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cashapp/receipt": {
+      "post": {
+        "summary": "Fetch CashApp receipt details",
+        "description": "Fetches details from a CashApp web receipt URL",
+        "tags": [
+          "CashApp"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FetchCashAppReceiptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully fetched receipt details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashAppReceiptDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
     "schemas": {
+      "CreatePaymentRequest": {
+        "type": "object",
+        "required": [
+          "cashTag",
+          "amount"
+        ],
+        "properties": {
+          "cashTag": {
+            "type": "string",
+            "description": "The cash tag for the payment"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "The amount of the payment"
+          },
+          "isWhiteLabel": {
+            "type": "boolean",
+            "description": "Whether the payment is white-labeled",
+            "default": false
+          },
+          "callbackUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to call back after payment processing"
+          },
+          "returnUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL to return to after payment"
+          }
+        }
+      },
+      "PaymentInvoice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the payment invoice"
+          },
+          "userId": {
+            "type": "string",
+            "description": "The ID of the user / merchant who created the payment invoice"
+          },
+          "cashTag": {
+            "type": "string",
+            "description": "The CashTag of the payment recipient"
+          },
+          "note": {
+            "type": "string",
+            "description": "The required note associated with the payment"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "The amount invoiced"
+          },
+          "isWhiteLabel": {
+            "type": "boolean",
+            "description": "Whether the payment is white-labeled"
+          },
+          "receiptId": {
+            "type": "string",
+            "description": "The ID of the web receipt for the payment",
+            "nullable": true
+          },
+          "paidAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "The amount paid"
+          },
+          "cashpayFee": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "The CashPay service fee"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "UNDER_PAID", "PAID", "FAILED", "EXPIRED"]
+          },
+          "paymentUrl": {
+            "type": "string",
+            "description": "The URL where the user can make the payment"
+          },
+          "callbackUrl": {
+            "type": "string",
+            "description": "The URL to call back on payment status changes",
+            "nullable": true
+          },
+          "returnUrl": {
+            "type": "string",
+            "description": "The URL where the user will be redirected after the payment",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the payment expires"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the payment was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the payment was last updated"
+          }
+        }
+      },
+      "FetchPaymentRequest": {
+        "type": "object",
+        "required": [
+          "invoiceId"
+        ],
+        "properties": {
+          "invoiceId": {
+            "type": "string",
+            "description": "The ID of the payment invoice to fetch"
+          }
+        }
+      },
+      "SubmitWebReceiptRequest": {
+        "type": "object",
+        "required": [
+          "invoiceId",
+          "webReceipt"
+        ],
+        "properties": {
+          "invoiceId": {
+            "type": "string",
+            "description": "The ID of the payment invoice"
+          },
+          "webReceipt": {
+            "type": "string",
+            "description": "The web receipt for the payment"
+          }
+        }
+      },
+      "FetchCashAppReceiptRequest": {
+        "type": "object",
+        "required": [
+          "webReceipt"
+        ],
+        "properties": {
+          "webReceipt": {
+            "type": "string",
+            "description": "The CashApp web receipt URL",
+            "pattern": "^https://cash.app/payments/"
+          }
+        }
+      },
+      "CashAppReceiptDetails": {
+        "type": "object",
+        "properties": {
+          "cashTag": {
+            "type": "string",
+            "description": "The CashTag of the payment recipient"
+          },
+          "value": {
+            "type": "string",
+            "description": "The payment amount as a string"
+          },
+          "note": {
+            "type": "string",
+            "description": "The note associated with the payment"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp of the payment"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Completed", "Failed"],
+            "description": "The status of the payment"
+          },
+          "source": {
+            "type": "string",
+            "description": "The source of the payment"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "The unique Cash App identifier of the payment"
+          },
+          "to": {
+            "type": "string",
+            "description": "The recipient of the payment"
+          },
+          "from": {
+            "type": "string",
+            "description": "The sender of the payment"
+          }
+        }
+      },
+
+
       "Plant": {
         "required": [
           "name"
@@ -183,12 +659,6 @@
             "type": "string"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }

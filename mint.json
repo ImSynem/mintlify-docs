@@ -1,29 +1,29 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Documentation",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#0D73A7",
+    "light": "#07A3C9",
+    "dark": "#0D5C93",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#0D73A7",
+      "to": "#07A3C9"
     }
   },
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "https://discord.gg/XFWr8Ahpjk"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "url": "https://cashpay.space/dashboard/home"
   },
   "tabs": [
     {
@@ -33,39 +33,17 @@
   ],
   "anchors": [
     {
-      "name": "Documentation",
+      "name": "CashPay",
       "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "url": "https://cashpay.space/dashboard/home"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
       "pages": [
-        "introduction",
         "quickstart",
-        "development"
-      ]
-    },
-    {
-      "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
+        "webhook"
       ]
     },
     {
@@ -75,15 +53,22 @@
       ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Payment API",
       "pages": [
-        "api-reference/endpoint/get",
         "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/endpoint/fetch",
+        "api-reference/endpoint/submit"
+      ]
+    },
+    {
+      "group": "Cash App API",
+      "pages": [
+        "api-reference/endpoint/cashapp-receipt"
       ]
     }
   ],
   "footerSocials": {
+    "discord": "https://discord.gg/XFWr8Ahpjk",
     "x": "https://x.com/mintlify",
     "github": "https://github.com/mintlify",
     "linkedin": "https://linkedin.com/company/mintlify"

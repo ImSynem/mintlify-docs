@@ -1,33 +1,28 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'CashPay API'
+description: 'Accept and process Cash App payments through the CashPay API'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Step 1: Authentication
 
-## Welcome
+To use the Hoodpay API, you will need to authenticate using an API key. You can obtain an API key by registering for an account on our website. Once you have an API key, you will need to include it in every request to our API by including it in the `Authorization` header like so: `Authorization: Bearer your_api_key_here`
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Step 2: Endpoints
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+The Hoodpay API provides several endpoints that you can use to interact with our service. You can find detailed information about each endpoint in our API Specs.
 
-## Authentication
+Here are a few of the most commonly used endpoints:
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+- [Payments](https://docs.cashpay.space/api-reference/payments) View/Create the payments.
+- [Businesses](https://docs.cashpay.space/api-reference/businesses) Get your businesses.
+- [Public Payments](https://docs.cashpay.space/api-reference/public-payments) View/Take actions as customer for payments.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+## Step 3: Making Requests
+
+To make a request to our API, you will need to send an HTTP request to the appropriate endpoint. All requests should include the `Authorization` header with your API key.
+
+Requests to our API should be sent using HTTPS. Requests sent over HTTP will be redirected.
+
+## Step 4: Handling Responses
+
+Responses from our API will be in JSON format. If a request is successful, the response status will be 200. If requests fails, then there will be `message` and array of `errors`
