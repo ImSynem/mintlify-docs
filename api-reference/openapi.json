@@ -672,6 +672,14 @@
               }
             }
           },
+          "network": {
+            "type": "object",
+            "properties": {
+              "network": {
+                "type": "string"
+              }
+            }
+          },
           "feePaidByPayer": {
             "type": "boolean"
           },

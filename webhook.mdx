@@ -1,6 +1,6 @@
 ---
-title: 'Webhook'
-description: 'Receive POST requests to your URL automatically when an event occurs.'
+title: "Webhook"
+description: "Receive POST requests to your URL automatically when an event occurs."
 ---
 
 Merchants can set up a `callbackUrl` in their merchant requests, and upon processing payments, Payvra will send you notifications in JSON format with all required information about the transaction, such as the amount and status, when the payment status is changed to Waiting, Confirming, Paid, Failed, or Expired.
@@ -15,7 +15,7 @@ The payout webhook is similar to a merchant webhook exactly. But for withdrawals
 
 ### Validating Callbacks
 
-Merchants must validate the signature of callbacks coming from Payvra using either their `Webhook Secret Key` if the webhook was set up in the dashboard, or an `API Key`associated with the account if webhook is from `callbackUrl`. also for payout webhooks you must validate the signature using your `PAYOUT_API_KEY`. Payvra uses your `MERCHANT_API_KEY` as the HMAC shared secret key to generate an HMAC(sha512) signature of the raw POST data. The HMAC signature is sent as an HTTP header called `HMAC`. The body of the request contains the callback data in JSON format, similar to the Payment Information API response body.
+Merchants must validate the signature of callbacks coming from Payvra using their `Webhook Secret Key` created when the webhook was set up in the dashboard. Payvra uses your `Webhook Secret Key` as the HMAC shared secret key to generate an HMAC(sha512) signature of the raw POST data. The HMAC signature is sent as an HTTP header called `HMAC`. The body of the request contains the callback data in JSON format, similar to the Payment Information API response body.
 
 ### Testing Webhook
 
@@ -27,7 +27,7 @@ For local debugging, you can use services like https://ngrok.io to expose your l
 
 1. Create a web server and define an endpoint to handle POST requests.
 
-   - Ensure that the firewall software on your server (e.g., Cloudflare) allows incoming requests from Payvra. You may need to whitelist Payvra's IP addresses on your side. Please reach out to support@payvra.space to obtain the list of IP addresses.
+   - Ensure that the firewall software on your server (e.g., Cloudflare) allows incoming requests from Payvra. You may need to whitelist Payvra's IP addresses on your side. Please reach out to support@payvra.com to obtain the list of IP addresses.
 
 2. Configure your server to receive POST requests at the specified endpoint URL.
 
@@ -49,20 +49,26 @@ In this section, we will provide examples of the data Payvra send to your system
 {
   "eventType": "PAYMENT_CREATED",
   "id": "cm2m00tok2221w6pp7mmabhn7",
-  "userId": "cm1av4q2l60002638vzvdzweu",
-  "cashTag": "$Example",
-  "note": "example-note",
-  "amount": 11.11,
-  "isWhiteLabel": false,
-  "receiptId": null,
-  "paidAmount": null,
-  "payvraFee": null,
+  "merchantId": "cm1av4q2l60002638vzvdzweu",
+  "paymentUrl": "https://payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
   "status": "PENDING",
-  "callbackUrl": "https://your-callback-url.com/callback",
+  "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "amount": 100.0,
+  "amountCurrency": "USD",
+  "rate": 65432.1,
+  "payAmount": 0.001528,
+  "cryptoCurrency": {
+    "symbol": "BTC"
+  },
+  "network": {
+    "network": "BTC"
+  },
+  "feePaidByPayer": true,
+  "underPaidCover": 5,
+  "isWhiteLabel": false,
   "returnUrl": "https://your-return-url.com",
   "expiresAt": "2024-10-24T14:57:49.123Z",
-  "createdAt": "2024-10-23T14:57:49.124Z",
-  "updatedAt": "2024-10-23T14:57:49.124Z"
+  "createdAt": "2024-10-23T14:57:49.124Z"
 }
 ```
 
@@ -70,20 +76,27 @@ In this section, we will provide examples of the data Payvra send to your system
 {
   "eventType": "PAYMENT_COMPLETED",
   "id": "cm2m00tok2221w6pp7mmabhn7",
-  "userId": "cm1av4q2l60002638vzvdzweu",
-  "cashTag": "$Example",
-  "note": "example-note",
-  "amount": 11.11,
-  "isWhiteLabel": false,
-  "receiptId": "c6onh81g30c1aw37bz89nuwgt",
-  "paidAmount": null,
-  "payvraFee": 0.17,
+  "merchantId": "cm1av4q2l60002638vzvdzweu",
+  "paymentUrl": "https://app.payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
   "status": "PAID",
-  "callbackUrl": "https://your-callback-url.com/callback",
+  "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "txHash": "2b3a7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
+  "amount": 100.0,
+  "amountCurrency": "USD",
+  "rate": 65432.1,
+  "payAmount": 0.001528,
+  "cryptoCurrency": {
+    "symbol": "BTC"
+  },
+  "network": {
+    "network": "BTC"
+  },
+  "feePaidByPayer": true,
+  "underPaidCover": 5,
+  "isWhiteLabel": false,
   "returnUrl": "https://your-return-url.com",
   "expiresAt": "2024-10-24T14:57:49.123Z",
-  "createdAt": "2024-10-23T14:57:49.124Z",
-  "updatedAt": "2024-10-23T15:17:14.559Z"
+  "createdAt": "2024-10-23T14:57:49.124Z"
 }
 ```
 
@@ -91,20 +104,26 @@ In this section, we will provide examples of the data Payvra send to your system
 {
   "eventType": "PAYMENT_EXPIRED",
   "id": "cm2m00tok2221w6pp7mmabhn7",
-  "userId": "cm1av4q2l60002638vzvdzweu",
-  "cashTag": "$Example",
-  "note": "example-note",
-  "amount": 11.11,
-  "isWhiteLabel": false,
-  "receiptId": null,
-  "paidAmount": null,
-  "payvraFee": null,
+  "merchantId": "cm1av4q2l60002638vzvdzweu",
+  "paymentUrl": "https://app.payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
   "status": "EXPIRED",
-  "callbackUrl": "https://your-callback-url.com/callback",
+  "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "amount": 100.0,
+  "amountCurrency": "USD",
+  "rate": 65432.1,
+  "payAmount": 0.001528,
+  "cryptoCurrency": {
+    "symbol": "BTC"
+  },
+  "network": {
+    "network": "BTC"
+  },
+  "feePaidByPayer": true,
+  "underPaidCover": 5,
+  "isWhiteLabel": false,
   "returnUrl": "https://your-return-url.com",
   "expiresAt": "2024-10-24T14:57:49.123Z",
-  "createdAt": "2024-10-23T14:57:49.124Z",
-  "updatedAt": "2024-10-23T14:57:49.124Z"
+  "createdAt": "2024-10-23T14:57:49.124Z"
 }
 ```
 
@@ -112,20 +131,118 @@ In this section, we will provide examples of the data Payvra send to your system
 {
   "eventType": "PAYMENT_FAILED",
   "id": "cm2m00tok2221w6pp7mmabhn7",
-  "userId": "cm1av4q2l60002638vzvdzweu",
-  "cashTag": "$Example",
-  "note": "example-note",
-  "amount": 11.11,
-  "isWhiteLabel": false,
-  "receiptId": "c6onh81g30c1aw37bz89nuwgt",
-  "paidAmount": null,
-  "payvraFee": null,
+  "merchantId": "cm1av4q2l60002638vzvdzweu",
+  "paymentUrl": "https://app.payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
   "status": "FAILED",
-  "callbackUrl": "https://your-callback-url.com/callback",
+  "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "amount": 100.0,
+  "amountCurrency": "USD",
+  "rate": 65432.1,
+  "payAmount": 0.001528,
+  "cryptoCurrency": {
+    "symbol": "BTC"
+  },
+  "network": {
+    "network": "BTC"
+  },
+  "feePaidByPayer": true,
+  "underPaidCover": 5,
+  "isWhiteLabel": false,
   "returnUrl": "https://your-return-url.com",
   "expiresAt": "2024-10-24T14:57:49.123Z",
-  "createdAt": "2024-10-23T14:57:49.124Z",
-  "updatedAt": "2024-10-23T14:57:49.124Z"
+  "createdAt": "2024-10-23T14:57:49.124Z"
+}
+```
+
+</CodeGroup>
+
+### Sample Payout IPN data
+
+In this section, we will provide examples of the data Payvra send to your system at various stages of the payment process.
+
+<CodeGroup>
+
+```json Payout Created
+{
+  "eventType": "PAYOUT_CREATED",
+  "id": "cm2m00tok2221w6pp7mmabhn7",
+  "wallet": {
+    "merchantId": "cm1av4q2l60002638vzvdzweu",
+    "currency": {
+      "symbol": "USDT"
+    }
+  },
+  "network": {
+    "network": "TRC20"
+  },
+  "status": "PROCESSING",
+  "address": "TRx2m00tok2221w6pp7mmabhn7USDT",
+  "txHash": null,
+  "amount": 1000.0,
+  "createdAt": "2024-10-23T14:57:49.124Z"
+}
+```
+
+```json Payout Confirming
+{
+  "eventType": "PAYOUT_CONFIRMING",
+  "id": "cm2m00tok2221w6pp7mmabhn7",
+  "wallet": {
+    "merchantId": "cm1av4q2l60002638vzvdzweu",
+    "currency": {
+      "symbol": "USDT"
+    }
+  },
+  "network": {
+    "network": "TRC20"
+  },
+  "status": "CONFIRMING",
+  "address": "TRx2m00tok2221w6pp7mmabhn7USDT",
+  "txHash": "2b3a7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
+  "amount": 1000.0,
+  "createdAt": "2024-10-23T14:57:49.124Z"
+}
+```
+
+```json Payout Completed
+{
+  "eventType": "PAYOUT_COMPLETED",
+  "id": "cm2m00tok2221w6pp7mmabhn7",
+  "wallet": {
+    "merchantId": "cm1av4q2l60002638vzvdzweu",
+    "currency": {
+      "symbol": "USDT"
+    }
+  },
+  "network": {
+    "network": "TRC20"
+  },
+  "status": "COMPLETED",
+  "address": "TRx2m00tok2221w6pp7mmabhn7USDT",
+  "txHash": "2b3a7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
+  "amount": 1000.0,
+  "createdAt": "2024-10-23T14:57:49.124Z"
+}
+```
+
+```json Payout Rejected
+{
+  "eventType": "PAYOUT_REJECTED",
+  "id": "cm2m00tok2221w6pp7mmabhn7",
+  "wallet": {
+    "merchantId": "cm1av4q2l60002638vzvdzweu",
+    "currency": {
+      "symbol": "USDT"
+    }
+  },
+  "network": {
+    "network": "TRC20"
+  },
+  "status": "REJECTED",
+  "address": "TRx2m00tok2221w6pp7mmabhn7USDT",
+  "txHash": null,
+  "amount": 1000.0,
+  "createdAt": "2024-10-23T14:57:49.124Z"
 }
 ```
 
@@ -168,65 +285,65 @@ if ($calculatedHmac === $hmacHeader) {
 ```
 
 ```javascript Node.js
-const http = require('http');
-const crypto = require('crypto');
+const http = require("http");
+const crypto = require("crypto");
 
 const server = http.createServer((req, res) => {
-    if (req.url === '/callback' && req.method === 'POST') {
-        // Validate HMAC signature
-        let postData = '';
+  if (req.url === "/callback" && req.method === "POST") {
+    // Validate HMAC signature
+    let postData = "";
 
-        req.on('data', chunk => {
-            postData += chunk;
-        });
+    req.on("data", (chunk) => {
+      postData += chunk;
+    });
 
-        req.on('end', () => {
-            // Parse the JSON data
-            let data = null;
-            try {
-                data = JSON.parse(postData);
-            } catch (error) {
-                res.statusCode = 400;
-                res.end('Invalid JSON data');
-                return;
-            }
+    req.on("end", () => {
+      // Parse the JSON data
+      let data = null;
+      try {
+        data = JSON.parse(postData);
+      } catch (error) {
+        res.statusCode = 400;
+        res.end("Invalid JSON data");
+        return;
+      }
 
-            const hmacHeader = req.headers['hmac'];
-            const calculatedHmac = crypto
-                .createHmac('sha512', 'YOUR_WEBHOOK_SECRET_KEY')
-                .update(postData)
-                .digest('hex');
+      const hmacHeader = req.headers["hmac"];
+      const calculatedHmac = crypto
+        .createHmac("sha512", "YOUR_WEBHOOK_SECRET_KEY")
+        .update(postData)
+        .digest("hex");
 
-            if (calculatedHmac === hmacHeader) {
-                // HMAC signature is valid
-                // Process the callback data based on the type
-                if (data.type === 'payment') {
-                    console.log('Received payment callback:', data);
-                    // Process payment data here
-                } else if (data.type === 'payout') {
-                    console.log('Received payout callback:', data);
-                    // Process payout data here
-                }
+      if (calculatedHmac === hmacHeader) {
+        // HMAC signature is valid
+        // Process the callback data based on the type
+        if (data.type === "payment") {
+          console.log("Received payment callback:", data);
+          // Process payment data here
+        } else if (data.type === "payout") {
+          console.log("Received payout callback:", data);
+          // Process payout data here
+        }
 
-                // Return HTTP Response 200 with content "OK"
-                res.statusCode = 200;
-                res.end('OK');
-            } else {
-                // HMAC signature is not valid
-                // Handle the error accordingly
-                res.statusCode = 400;
-                res.end('Invalid HMAC signature');
-            }
-        });
-    } else {
-        // Invalid path or method
-        res.statusCode = 404;
-        res.end('Not Found');
-    }
+        // Return HTTP Response 200 with content "OK"
+        res.statusCode = 200;
+        res.end("OK");
+      } else {
+        // HMAC signature is not valid
+        // Handle the error accordingly
+        res.statusCode = 400;
+        res.end("Invalid HMAC signature");
+      }
+    });
+  } else {
+    // Invalid path or method
+    res.statusCode = 404;
+    res.end("Not Found");
+  }
 });
 
 server.listen(3000, () => {
-    console.log('Server listening on port 3000');
+  console.log("Server listening on port 3000");
 });
 ```
 
@@ -270,8 +387,6 @@ if __name__ == '__main__':
     app.run(host='YOUR_HOST_ADDRESS',port=3000)
 ```
 
-
-
 </CodeGroup>
 
 Again, please note that these code snippets serve as examples and may require modifications based on your specific implementation and framework.
@@ -282,24 +397,27 @@ Here are some common issues you might encounter when implementing webhooks and h
 
 <AccordionGroup>
   <Accordion title="Not receiving webhook notifications">
-    - Ensure your `callbackUrl` is correctly set and accessible from the internet.
-    - Check your server's firewall settings to allow incoming requests from Payvra.
-    - Verify that your server is responding with a 200 OK status and 'ok' message.
+    - Ensure your `callbackUrl` is correctly set and accessible from the
+    internet. - Check your server's firewall settings to allow incoming requests
+    from Payvra. - Verify that your server is responding with a 200 OK status
+    and 'ok' message.
   </Accordion>
   <Accordion title="Invalid HMAC signature">
-    - Double-check that you're using the correct `MERCHANT_API_KEY` or `PAYOUT_API_KEY`.
-    - Ensure you're calculating the HMAC signature on the raw POST data, not the parsed JSON.
-    - Verify that you're using the SHA-512 algorithm for HMAC calculation.
+    - Double-check that you're using the correct `MERCHANT_API_KEY` or
+    `PAYOUT_API_KEY`. - Ensure you're calculating the HMAC signature on the raw
+    POST data, not the parsed JSON. - Verify that you're using the SHA-512
+    algorithm for HMAC calculation.
   </Accordion>
   <Accordion title="Webhook timeouts">
-    - Optimize your webhook handling code to process requests quickly.
-    - Implement asynchronous processing for time-consuming tasks.
-    - Ensure your server can handle concurrent webhook requests.
+    - Optimize your webhook handling code to process requests quickly. -
+    Implement asynchronous processing for time-consuming tasks. - Ensure your
+    server can handle concurrent webhook requests.
   </Accordion>
   <Accordion title="Duplicate webhook notifications">
-    - Implement idempotency in your webhook handler to safely process duplicate notifications.
-    - Store processed webhook IDs to detect and ignore duplicates.
+    - Implement idempotency in your webhook handler to safely process duplicate
+    notifications. - Store processed webhook IDs to detect and ignore
+    duplicates.
   </Accordion>
 </AccordionGroup>
 
-If you're still experiencing issues after trying these solutions, please contact our support team at support@payvra.space for further assistance.
+If you're still experiencing issues after trying these solutions, please contact our support team at support@payvra.com for further assistance.

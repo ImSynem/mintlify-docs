@@ -5,7 +5,7 @@
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "colors": {
     "primary": "#0D73A7",
     "light": "#07A3C9",
@@ -23,7 +23,7 @@
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://payvra.space/dashboard/home"
+    "url": "https://payvra.com/dashboard/home"
   },
   "tabs": [
     {
@@ -35,7 +35,7 @@
     {
       "name": "Payvra",
       "icon": "book-open-cover",
-      "url": "https://payvra.space/dashboard/home"
+      "url": "https://payvra.com/dashboard/home"
     }
   ],
   "navigation": [
