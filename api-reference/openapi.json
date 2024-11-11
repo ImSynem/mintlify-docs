@@ -133,7 +133,7 @@
     "/api/v1/currencies": {
       "post": {
         "summary": "Fetch supported cryptocurrencies",
-        "description": "Returns a list of cryptocurrencies supported for the authenticated merchant",
+        "description": "Returns a list of cryptocurrencies and networks supported by Payvra",
         "tags": [
           "Currencies"
         ],

@@ -3,15 +3,23 @@ title: "Webhook"
 description: "Receive POST requests to your URL automatically when an event occurs."
 ---
 
-Merchants can set up a `callbackUrl` in their merchant requests, and upon processing payments, Payvra will send you notifications in JSON format with all required information about the transaction, such as the amount and status, when the payment status is changed to Waiting, Confirming, Paid, Failed, or Expired.
+Merchants can configure webhook endpoints through their dashboard to receive notifications when specific events occur. When configured events happen, Payvra will send notifications in JSON format with all required information about the transaction, such as the amount and status.
 
-To receive webhook notifications, first, you should implement a standard HTTP POST (application/json) call over an HTTPS URL to a CGI script on your server. Insert your created endpoint address in the `callbackUrl` field of merchant requests. You will receive payment updates (statuses) to this URL address.
+### Setting Up Webhooks
 
-However, you will initially receive a callback with the "Confirming" status. You should wait for a second callback where the "status" value will be "Paid". When we confirm the transaction, we are ready to manage all the risks concerning accepting real funds later. You should not be concerned about it.
+1. Navigate to the Webhooks section in your Payvra dashboard
+2. Click "Add Webhook Endpoint"
+3. Enter your endpoint URL where you want to receive notifications
+4. Select the events you want to subscribe to (e.g., PAYMENT_CREATED, PAYMENT_COMPLETED)
+5. Save the webhook configuration to receive your unique Webhook Secret Key
 
-Merchant's callbackUrl must return an HTTP Response 200 with content: ok for Payvra API to confirm the callback as successful. The system will try to deliver a webhook notification up to 5 times or until a successful delivery occurs, whichever happens first. If the first attempt fails, the second one is triggered after approximately 1 minute. The third one is delayed for 3 more minutes, the fourth for 30 minutes, and the last one for 3 hours.
+Each webhook endpoint can be configured independently with its own secret key and event subscriptions. You can add multiple endpoints and manage them through the dashboard.
 
-The payout webhook is similar to a merchant webhook exactly. But for withdrawals, you will receive different values of the "address" parameter in every callback.
+The webhook endpoint must return an HTTP Response 200 with content: ok for Payvra API to confirm the callback as successful. The system will try to deliver a webhook notification up to 5 times or until a successful delivery occurs, whichever happens first. If the first attempt fails, the second one is triggered after approximately 1 minute. The third one is delayed for 3 more minutes, the fourth for 30 minutes, and the last one for 3 hours.
+
+### Webhook Security
+
+Each webhook endpoint has its own `Webhook Secret Key` that's generated when you create the endpoint. This key should be used to validate incoming webhooks using HMAC(sha512) signatures. Payvra sends the signature in the `HMAC` HTTP header of each request.
 
 ### Validating Callbacks
 
@@ -19,7 +27,7 @@ Merchants must validate the signature of callbacks coming from Payvra using thei
 
 ### Testing Webhook
 
-For payment callback handling, you can use tools like requestcatcher.com to create a test `callbackUrl` and inspect the callback data sent from Payvra. Note that Payvra payment callbacks will not be sent to private networks (e.g., localhost).
+For payment callback handling, you can use tools like requestcatcher.com to create a test `endpoint URL` and inspect the callback data sent from Payvra. Note that Payvra payment callbacks will not be sent to private networks (e.g., localhost).
 
 For local debugging, you can use services like https://ngrok.io to expose your local server to the internet and receive webhook callbacks.
 
@@ -77,7 +85,7 @@ In this section, we will provide examples of the data Payvra send to your system
   "eventType": "PAYMENT_COMPLETED",
   "id": "cm2m00tok2221w6pp7mmabhn7",
   "merchantId": "cm1av4q2l60002638vzvdzweu",
-  "paymentUrl": "https://app.payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
+  "paymentUrl": "https://payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
   "status": "PAID",
   "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
   "txHash": "2b3a7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
@@ -105,7 +113,7 @@ In this section, we will provide examples of the data Payvra send to your system
   "eventType": "PAYMENT_EXPIRED",
   "id": "cm2m00tok2221w6pp7mmabhn7",
   "merchantId": "cm1av4q2l60002638vzvdzweu",
-  "paymentUrl": "https://app.payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
+  "paymentUrl": "https://payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
   "status": "EXPIRED",
   "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
   "amount": 100.0,
@@ -132,7 +140,7 @@ In this section, we will provide examples of the data Payvra send to your system
   "eventType": "PAYMENT_FAILED",
   "id": "cm2m00tok2221w6pp7mmabhn7",
   "merchantId": "cm1av4q2l60002638vzvdzweu",
-  "paymentUrl": "https://app.payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
+  "paymentUrl": "https://payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
   "status": "FAILED",
   "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
   "amount": 100.0,
@@ -397,7 +405,7 @@ Here are some common issues you might encounter when implementing webhooks and h
 
 <AccordionGroup>
   <Accordion title="Not receiving webhook notifications">
-    - Ensure your `callbackUrl` is correctly set and accessible from the
+    - Ensure your `endpoint URL` is correctly set and accessible from the
     internet. - Check your server's firewall settings to allow incoming requests
     from Payvra. - Verify that your server is responding with a 200 OK status
     and 'ok' message.
