@@ -80,15 +80,14 @@ In this section, we will provide examples of the data Payvra send to your system
 }
 ```
 
-```json Payment Completed
+```json Payment Confirming
 {
-  "eventType": "PAYMENT_COMPLETED",
+  "eventType": "PAYMENT_CONFIRMING",
   "id": "cm2m00tok2221w6pp7mmabhn7",
   "merchantId": "cm1av4q2l60002638vzvdzweu",
   "paymentUrl": "https://payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
-  "status": "PAID",
+  "status": "CONFIRMING",
   "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
-  "txHash": "2b3a7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
   "amount": 100.0,
   "amountCurrency": "USD",
   "rate": 0.014285,
@@ -103,6 +102,36 @@ In this section, we will provide examples of the data Payvra send to your system
   "underPaidCover": 5,
   "isWhiteLabel": false,
   "returnUrl": "https://your-return-url.com",
+  "expiresAt": "2024-10-24T14:57:49.123Z",
+  "createdAt": "2024-10-23T14:57:49.124Z"
+}
+```
+
+```json Payment Completed
+{
+  "eventType": "PAYMENT_COMPLETED",
+  "id": "cm2m00tok2221w6pp7mmabhn7",
+  "merchantId": "cm1av4q2l60002638vzvdzweu",
+  "paymentUrl": "https://payvra.com/payment/cm2m00tok2221w6pp7mmabhn7",
+  "status": "PAID",
+  "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "txHash": "2b3a7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
+  "amount": 100.0,
+  "amountCurrency": "USD",
+  "rate": 0.014285,
+  "payAmount": 1.428571,
+  "paidAmount": 1.428571,
+  "cryptoCurrency": {
+    "symbol": "LTC"
+  },
+  "network": {
+    "network": "Litecoin"
+  },
+  "feePaidByPayer": true,
+  "underPaidCover": 5,
+  "isWhiteLabel": false,
+  "returnUrl": "https://your-return-url.com",
+  "paidAt": "2024-10-24T14:57:49.123Z",
   "expiresAt": "2024-10-24T14:57:49.123Z",
   "createdAt": "2024-10-23T14:57:49.124Z"
 }
@@ -147,6 +176,7 @@ In this section, we will provide examples of the data Payvra send to your system
   "amountCurrency": "USD",
   "rate": 0.014285,
   "payAmount": 1.428571,
+  "paidAmount": 1.242345,
   "cryptoCurrency": {
     "symbol": "LTC"
   },
@@ -157,6 +187,7 @@ In this section, we will provide examples of the data Payvra send to your system
   "underPaidCover": 5,
   "isWhiteLabel": false,
   "returnUrl": "https://your-return-url.com",
+  "paidAt": "2024-10-24T14:57:49.123Z",
   "expiresAt": "2024-10-24T14:57:49.123Z",
   "createdAt": "2024-10-23T14:57:49.124Z"
 }
