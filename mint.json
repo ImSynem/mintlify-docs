@@ -72,6 +72,13 @@
         "api-reference/endpoint/payout-create",
         "api-reference/endpoint/payout-fetch"
       ]
+    },
+    {
+      "group": "Exchange",
+      "pages": [
+        "api-reference/endpoint/exchange-pairs",
+        "api-reference/endpoint/exchange-create"
+      ]
     }
   ],
   "footerSocials": {

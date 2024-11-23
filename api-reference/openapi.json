@@ -179,6 +179,53 @@
         }
       }
     },
+    "/api/v1/exchange/pairs": {
+      "post": {
+        "summary": "Fetch available exchange pairs",
+        "description": "Returns a list of available exchange pairs with their current rates and minimum amounts",
+        "tags": ["Exchange"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exchange pairs retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExchangePair"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/merchants/invoice/create": {
       "post": {
         "summary": "Create a payment invoice",
@@ -438,6 +485,70 @@
           },
           "401": {
             "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/merchants/exchange/create": {
+      "post": {
+        "summary": "Create a new exchange",
+        "description": "Creates a new exchange between two cryptocurrencies for the authenticated merchant",
+        "tags": ["Exchange"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExchangeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Exchange created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExchangeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -822,6 +933,108 @@
           "network": {
             "type": "string",
             "description": "Network to be used for the cryptocurrency"
+          }
+        }
+      },
+      "ExchangePair": {
+        "type": "object",
+        "properties": {
+          "minAmount": {
+            "type": "number",
+            "description": "Minimum amount for exchange"
+          },
+          "rate": {
+            "type": "number",
+            "description": "Current exchange rate"
+          },
+          "fromCurrency": {
+            "type": "object",
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "description": "Symbol of the source currency"
+              }
+            }
+          },
+          "toCurrency": {
+            "type": "object",
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "description": "Symbol of the target currency"
+              }
+            }
+          }
+        }
+      },
+      "CreateExchangeRequest": {
+        "type": "object",
+        "required": ["fromCurrency", "toCurrency", "amount"],
+        "properties": {
+          "fromCurrency": {
+            "type": "string",
+            "description": "Symbol of the source cryptocurrency"
+          },
+          "toCurrency": {
+            "type": "string",
+            "description": "Symbol of the target cryptocurrency"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount to exchange from the source currency",
+            "minimum": 0,
+            "multipleOf": 0.00000001
+          }
+        }
+      },
+      "ExchangeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SUCCESS", "FAILED"]
+          },
+          "fromWallet": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "object",
+                "properties": {
+                  "symbol": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "toWallet": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "object",
+                "properties": {
+                  "symbol": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "amount": {
+            "type": "number"
+          },
+          "rate": {
+            "type": "number"
+          },
+          "toAmount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
