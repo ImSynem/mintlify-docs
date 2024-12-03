@@ -47,6 +47,12 @@
       ]
     },
     {
+      "group": "Integrations",
+      "pages": [
+        "node-sdk"
+      ]
+    },
+    {
       "group": "API Documentation",
       "pages": [
         "api-reference/introduction"
