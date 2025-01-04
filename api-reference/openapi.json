@@ -887,7 +887,8 @@
             "type": "string"
           },
           "txHash": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "amount": {
             "type": "number"
