@@ -851,6 +851,10 @@
       "PayoutResponse": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the payout"
+          },
           "wallet": {
             "type": "object",
             "properties": {
